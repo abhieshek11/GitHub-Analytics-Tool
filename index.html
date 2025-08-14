@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Advanced GitHub Analytics Dashboard - Analyze any GitHub user's repositories, languages, and statistics">
+    <meta name="theme-color" content="#00d4ff">
+    <title>GitHub Analytics</title>
+
+    <!-- Favicon with Your Ducky Image -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="ducky.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="ducky.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="ducky.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="ducky.png">
+    <link rel="shortcut icon" href="ducky.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <div class="main-container">
+        <!-- Header -->
+        <header class="hero-header">
+            <div class="hero-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <img src="ducky.png" alt="Ducky Analytics" class="ducky-logo">
+                        <div class="logo-glow"></div>
+                    </div>
+                    <h1 class="hero-title">
+                        GitHub<span class="accent">Analytics</span>
+                    </h1>
+                </div>
+                <p class="hero-subtitle">Advanced developer insights & repository analytics</p>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <div class="search-icon">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <input type="text" id="usernameInput" class="search-input" placeholder="Enter GitHub username..."
+                        autocomplete="off">
+                    <button id="searchBtn" class="search-btn">
+                        <span class="btn-text">Analyze</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loadingSpinner" class="loading-container hidden">
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+            <p class="loading-text">Analyzing GitHub profile...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-container hidden">
+            <div class="error-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="errorText"></span>
+            </div>
+        </div>
+
+        <!-- User Profile -->
+        <div id="userProfile" class="profile-container hidden">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar-container">
+                    <img id="userAvatar" src="" alt="User Avatar" class="profile-avatar">
+                    <div class="avatar-ring"></div>
+                </div>
+                <div class="profile-info">
+                    <h2 id="userName" class="profile-name"></h2>
+                    <p id="userBio" class="profile-bio"></p>
+                    <div class="profile-links">
+                        <a id="profileLink" href="#" target="_blank" class="profile-link">
+                            <i class="fab fa-github"></i>
+                            View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span id="publicRepos" class="stat-number">0</span>
+                        <span class="stat-label">Repositories</span>
+                    </div>
+                    <div class="stat-glow"></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span id="followers" class="stat-number">0</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <div class="stat-glow"></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span id="following" class="stat-number">0</span>
+                        <span class="stat-label">Following</span>
+                    </div>
+                    <div class="stat-glow"></div>
+                </div>
+                <div class="stat-card highlight">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span id="totalStars" class="stat-number">0</span>
+                        <span class="stat-label">Total Stars</span>
+                    </div>
+                    <div class="stat-glow"></div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-code"></i>
+                            Language Distribution
+                        </h3>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="languageChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-star"></i>
+                            Repository Stars
+                        </h3>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="starsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Repositories Grid -->
+            <div class="repos-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-folder-open"></i>
+                        Top Repositories
+                    </h3>
+                </div>
+                <div id="repositoriesList" class="repos-grid">
+                    <!-- Repositories will be populated here -->
+                </div>
+            </div>
+
+            <!-- Minimal Footer - Only shows when user profile is displayed -->
+            <footer class="minimal-footer">
+                <div class="footer-content">
+                    <div class="footer-name">
+                        <span>© 2025 <strong>Abhishek Kumar</strong> - All rights reserved</span>
+                    </div>
+                    <div class="footer-social">
+                        <a href="https://github.com/abhieshek11" target="_blank" class="footer-social-link"
+                            title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/abhieshek11/" target="_blank" class="footer-social-link"
+                            title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://www.instagram.com/abhisk02/" target="_blank" class="footer-social-link"
+                            title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="mailto:abhieshek11@gmail.com" class="footer-social-link" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
